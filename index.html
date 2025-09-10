@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>マーケタータイプ診断</title>
+<style>
+  body { font-family: Arial, sans-serif; max-width: 800px; margin: auto; padding: 20px; line-height:1.6;}
+  h1 { text-align:center; }
+  h2 { color: #333; margin-top:30px;}
+  .question { margin-bottom: 20px; }
+  .option { 
+    margin: 8px 0; 
+    display:block; 
+    padding: 12px 20px; 
+    font-size:16px; 
+    cursor:pointer; 
+    width:100%; 
+    text-align:left; 
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background:#f9f9f9;
+    transition: background 0.2s;
+  }
+  .option:hover { background:#eef; }
+</style>
+</head>
+<body>
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>マーケタータイプ診断</title>
+<style>
+  body { font-family: Arial, sans-serif; max-width: 800px; margin: auto; padding: 20px; line-height:1.6; background:#fefefe;}
+  h1 { text-align:center; }
+  h2 { color: #333; margin-top:30px;}
+  .question { margin-bottom: 20px; }
+  .option { 
+    margin: 8px 0; 
+    display:block; 
+    padding: 12px 20px; 
+    font-size:16px; 
+    cursor:pointer; 
+    width:100%; 
+    text-align:left; 
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background:#f9f9f9;
+    transition: background 0.2s;
+  }
+  .option:hover { background:#eef; }
+  /* メイン診断用 */
+  .main-type { border-left:4px solid #2a6ebb; padding:10px 15px; margin-bottom:15px; background:#eef7ff; border-radius:6px; }
+  .main-type h4 { margin:0 0 5px 0; }
+  .main-type p { margin:0; }
+  /* サブ診断用 */
+  .sub-type { border-left:3px solid #aaa; padding:8px 12px; margin-bottom:10px; background:#f5f5f5; border-radius:6px; }
+  .sub-type h4 { margin:0 0 3px 0; font-size:1em; }
+  .sub-type p { margin:0; font-size:0.9em; }
+</style>
+</head>
+<body>
+
+<h1>あなたのマーケタータイプ診断</h1>
+<div id="quiz"></div>
+<div id="result" style="display:none;"></div>
+
+<script>
+// 質問データ
+const questions = [
+  { q: "キャンペーンを企画するとき、最初に重視するのは？", options:[
+      {text:"ブランドの世界観や統一感が伝わるか", type:"ブランディング派"},
+      {text:"ユニークさや斬新さで話題化できるか", type:"広告クリエイティブ派"},
+      {text:"売上や成果に直結する施策かどうか", type:"コンバージョン・売上派"},
+      {text:"数値やデータで効果を検証できるか", type:"データ・PDCA派"},
+      {text:"戦略やロジックとして整合性があるか", type:"戦略・フレームワーク派"},
+      {text:"最新のトレンドや新ツールを活かせるか", type:"トレンド施策派"},
+      {text:"学術的な理論や研究で裏付けられるか", type:"学術・アカデミック派"},
+      {text:"現場経験や直感で効果が期待できるか", type:"経験値・現場主義派"}
+  ]},
+  { q: "施策の成功を判断する一番の基準は？", options:[
+      {text:"ブランドイメージが確実に向上したか", type:"ブランディング派"},
+      {text:"SNSなどで多くの話題を獲得できたか", type:"広告クリエイティブ派"},
+      {text:"売上やコンバージョンが大きく伸びたか", type:"コンバージョン・売上派"},
+      {text:"データ分析で改善効果が明確に出たか", type:"データ・PDCA派"},
+      {text:"戦略どおりに市場を動かせたかどうか", type:"戦略・フレームワーク派"},
+      {text:"トレンドに乗って注目を集められたか", type:"トレンド施策派"},
+      {text:"理論や研究に基づき正当性を示せたか", type:"学術・アカデミック派"},
+      {text:"現場の感覚で効果を実感できたかどうか", type:"経験値・現場主義派"}
+  ]},
+  { q: "新しい施策を検討する際に重視する情報源は？", options:[
+      {text:"他社ブランドやデザインの最新事例", type:"ブランディング派"},
+      {text:"バズを生んだ広告や面白い動画事例", type:"広告クリエイティブ派"},
+      {text:"過去の売上データや利益率の推移", type:"コンバージョン・売上派"},
+      {text:"A/Bテストやアクセス解析の結果値", type:"データ・PDCA派"},
+      {text:"市場レポートや戦略モデルの分析結果", type:"戦略・フレームワーク派"},
+      {text:"最新ニュースやツール紹介の専門記事", type:"トレンド施策派"},
+      {text:"論文や学術発表、専門書の知見", type:"学術・アカデミック派"},
+      {text:"営業や顧客から直接聞いた現場の声", type:"経験値・現場主義派"}
+  ]},
+  { q: "チームでよく口にする言葉はどれですか？", options:[
+      {text:"「ブランドの一貫性を守ることが大事」", type:"ブランディング派"},
+      {text:"「もっと面白いアイデアを出そうよ」", type:"広告クリエイティブ派"},
+      {text:"「その施策は売上に直結するのか？」", type:"コンバージョン・売上派"},
+      {text:"「まずはデータで検証してみよう」", type:"データ・PDCA派"},
+      {text:"「戦略を整理してから進めようよ」", type:"戦略・フレームワーク派"},
+      {text:"「今のトレンドをうまく活かそう」", type:"トレンド施策派"},
+      {text:"「理論的に正しいか確認しよう」", type:"学術・アカデミック派"},
+      {text:"「現場でどう感じたかを教えて」", type:"経験値・現場主義派"}
+  ]},
+  { q: "マーケティングで最もワクワクする瞬間は？", options:[
+      {text:"ブランドのビジュアルやコピーが完成", type:"ブランディング派"},
+      {text:"仕掛けた施策が話題化して拡散された時", type:"広告クリエイティブ派"},
+      {text:"売上や成果のグラフが大きく伸びた時", type:"コンバージョン・売上派"},
+      {text:"数値の改善がはっきりと見えた瞬間", type:"データ・PDCA派"},
+      {text:"ロジカルな戦略が実現して成果を出した時", type:"戦略・フレームワーク派"},
+      {text:"新しいツールを試して成果が出せた時", type:"トレンド施策派"},
+      {text:"研究と実務が結びついて効果を出せた時", type:"学術・アカデミック派"},
+      {text:"経験が的中して成果を実感できた時", type:"経験値・現場主義派"}
+  ]}
+];
+
+// タイプ診断テキスト
+const typeDescriptions = {
+  "ブランディング派":"ブランドの世界観や統一感を重視するタイプ。ブランド価値向上に長ける。",
+  "広告クリエイティブ派":"面白さや斬新さで話題を生むタイプ。SNSやバズ施策が得意。",
+  "コンバージョン・売上派":"売上直結の施策を最優先。数字に強く即効性がある。",
+  "データ・PDCA派":"データに基づき改善を回すタイプ。施策の再現性が高い。",
+  "戦略・フレームワーク派":"MBA的思考で全体を設計。長期戦略に強い。",
+  "トレンド施策派":"最新トレンドやツールを追求。注目度の高い施策が得意。",
+  "学術・アカデミック派":"理論・研究に基づくタイプ。施策の科学的妥当性が高い。",
+  "経験値・現場主義派":"現場感覚・経験重視。実務に即した判断ができる。"
+};
+
+// シャッフル関数
+function shuffle(array){
+  for(let i = array.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
+let currentQ = 0;
+let scores = {
+  "ブランディング派":0,"広告クリエイティブ派":0,"コンバージョン・売上派":0,
+  "データ・PDCA派":0,"戦略・フレームワーク派":0,"トレンド施策派":0,
+  "学術・アカデミック派":0,"経験値・現場主義派":0
+};
+
+// 質問表示
+function showQuestion(){
+  if(currentQ >= questions.length){
+    showResult();
+    return;
+  }
+  const q = questions[currentQ];
+  const quizDiv = document.getElementById("quiz");
+  quizDiv.innerHTML = `<h2>Q${currentQ+1}. ${q.q}</h2>`;
+  const optionsShuffled = shuffle([...q.options]);
+  optionsShuffled.forEach(opt=>{
+    const btn = document.createElement("button");
+    btn.innerText = opt.text;
+    btn.className = "option";
+    btn.onclick = ()=>{ scores[opt.type]++; currentQ++; showQuestion(); };
+    quizDiv.appendChild(btn);
+  });
+}
+
+// 結果表示（メイン・サブ診断）
+function showResult(){
+  document.getElementById("quiz").style.display = "none";
+  const resultDiv = document.getElementById("result");
+  resultDiv.style.display = "block";
+  resultDiv.innerHTML = "<h2>あなたのマーケタータイプ診断結果</h2>";
+
+  const sortedScores = Object.entries(scores).sort((a,b)=>b[1]-a[1]);
+  
+  // メイン診断
+  const mainScore = sortedScores[0][1];
+  const mainTypes = sortedScores.filter(([type,score])=>score===mainScore).map(([type])=>type);
+  resultDiv.innerHTML += "<h3 style='color:#2a6ebb; font-size:1.5em;'>メイン診断</h3>";
+  mainTypes.forEach(t=>{
+    resultDiv.innerHTML += `<div class="main-type"><h4>${t}</h4><p>${typeDescriptions[t]}</p></div>`;
+  });
+
+  // サブ診断
+  const subScore = sortedScores.filter(([type,score])=>score<mainScore)[0]?.[1];
+  if(subScore !== undefined){
+    const subTypes = sortedScores.filter(([type,score])=>score===subScore).map(([type])=>type);
+    resultDiv.innerHTML += "<h3 style='color:#555; font-size:1.2em;'>サブ診断</h3>";
+    subTypes.forEach(t=>{
+      resultDiv.innerHTML += `<div class="sub-type"><h4>${t}</h4><p>${typeDescriptions[t]}</p></div>`;
+    });
+  }
+}
+
+showQuestion();
+</script>
+</body>
+</html>
