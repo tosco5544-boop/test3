@@ -2,43 +2,135 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>マーケタータイプ診断</title>
 <style>
-  body { font-family: Arial, sans-serif; max-width: 800px; margin: auto; padding: 20px; line-height:1.6; background:#fefefe;}
-  h1 { text-align:center; }
-  h2 { color: #333; margin-top:30px;}
-  .question { margin-bottom: 20px; }
-  .option { 
-    margin: 8px 0; 
-    display:block; 
-    padding: 12px 20px; 
-    font-size:16px; 
-    cursor:pointer; 
-    width:100%; 
-    text-align:left; 
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    background:#f9f9f9;
-    transition: background 0.2s;
+  /* 基本設定 */
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 20px;
+    line-height: 1.7;
+    background: #fdfdfd;
+    color: #333;
   }
-  .option:hover { background:#eef; }
-  /* メイン診断用 */
-  .main-type { border-left:4px solid #2a6ebb; padding:10px 15px; margin-bottom:15px; background:#eef7ff; border-radius:6px; }
-  .main-type h4 { margin:0 0 5px 0; }
-  .main-type p { margin:0; }
-  /* サブ診断用 */
-  .sub-type { border-left:3px solid #aaa; padding:8px 12px; margin-bottom:10px; background:#f5f5f5; border-radius:6px; }
-  .sub-type h4 { margin:0 0 3px 0; font-size:1em; }
-  .sub-type p { margin:0; font-size:0.9em; }
+
+  /* 見出し */
+  h1 {
+    text-align: center;
+    font-size: 28px;
+    margin-bottom: 40px;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+  h2 {
+    color: #333;
+    margin-top: 40px;
+    margin-bottom: 20px;
+    font-size: 22px;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 10px;
+  }
+  h3 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-top: 40px;
+    margin-bottom: 15px;
+    padding-left: 12px;
+    border-left: 4px solid #007bff;
+  }
+  h4 {
+    margin: 0 0 8px 0;
+  }
+
+  /* 質問の選択肢ボタン */
+  .option {
+    margin: 10px 0;
+    display: block;
+    padding: 15px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fff;
+    transition: all 0.2s ease;
+    box-sizing: border-box; /* paddingを含めた幅計算 */
+  }
+  .option:hover {
+    background: #f3f8ff;
+    border-color: #007bff;
+    transform: translateY(-2px); /* 少し浮き上がる効果 */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  }
+
+  /* 結果表示エリア */
+  #result {
+    display: none;
+  }
+
+  /* メイン診断結果 */
+  .main-type {
+    border: 1px solid #cce5ff;
+    padding: 20px;
+    margin-bottom: 20px;
+    background: #f7fbff;
+    border-radius: 8px;
+  }
+  .main-type h4 {
+    color: #004085;
+    font-size: 1.2em;
+  }
+  .main-type p {
+    margin: 0;
+    font-size: 1em;
+  }
+
+  /* サブ診断結果 */
+  .sub-type {
+    border: 1px solid #e2e3e5;
+    padding: 15px;
+    margin-bottom: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+  }
+  .sub-type h4 {
+    color: #383d41;
+    font-size: 1.1em;
+  }
+  .sub-type p {
+    margin: 0;
+    font-size: 0.95em;
+  }
+  
+  /* スマホレスポンシブ対応 */
+  @media (max-width: 768px) {
+    body {
+      padding: 15px;
+    }
+    h1 {
+      font-size: 24px;
+    }
+    h2 {
+      font-size: 20px;
+    }
+    .option {
+      padding: 12px 15px;
+    }
+  }
+
 </style>
 </head>
 <body>
 
 <h1>あなたのマーケタータイプ診断</h1>
 <div id="quiz"></div>
-<div id="result" style="display:none;"></div>
+<div id="result"></div>
 
 <script>
+// ★★ここから下が更新された質問項目です★★
 const questions = [
   {
     q: "キャンペーンを企画するとき、重視するのは？",
@@ -171,6 +263,9 @@ const questions = [
     ]
   }
 ];
+// ★★ここまでが更新された質問項目です★★
+
+
 // タイプ診断テキスト
 const typeDescriptions = {
   "ブランディング派":"ブランドの世界観や統一感を重視するタイプ。ブランド価値向上に長ける。",
@@ -218,28 +313,25 @@ function showQuestion(){
   });
 }
 
-// 結果表示（メイン・サブ診断） - 修正版
+// 結果表示
 function showResult(){
   document.getElementById("quiz").style.display = "none";
   const resultDiv = document.getElementById("result");
   resultDiv.style.display = "block";
   resultDiv.innerHTML = "<h2>あなたのマーケタータイプ診断結果</h2>";
-
-  // スコアを降順でソート
   const sortedScores = Object.entries(scores).sort((a,b)=>b[1]-a[1]);
- 
-  // メイン診断 (1つに限定)
+  
+  // メイン診断
   if (sortedScores.length > 0 && sortedScores[0][1] > 0) {
-    const mainType = sortedScores[0][0]; // 1位のタイプ名
-    resultDiv.innerHTML += "<h3 style='color:#2a6ebb; font-size:1.5em;'>メイン診断</h3>";
+    const mainType = sortedScores[0][0];
+    resultDiv.innerHTML += "<h3>メインタイプ</h3>";
     resultDiv.innerHTML += `<div class="main-type"><h4>${mainType}</h4><p>${typeDescriptions[mainType]}</p></div>`;
   }
 
-  // サブ診断 (1つに限定)
-  // 2番目の要素が存在し、かつスコアが0より大きい場合のみ表示
+  // サブ診断
   if (sortedScores.length > 1 && sortedScores[1][1] > 0) {
-    const subType = sortedScores[1][0]; // 2位のタイプ名
-    resultDiv.innerHTML += "<h3 style='color:#555; font-size:1.2em;'>サブ診断</h3>";
+    const subType = sortedScores[1][0];
+    resultDiv.innerHTML += "<h3>サブタイプ</h3>";
     resultDiv.innerHTML += `<div class="sub-type"><h4>${subType}</h4><p>${typeDescriptions[subType]}</p></div>`;
   }
 }
