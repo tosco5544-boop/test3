@@ -4,34 +4,6 @@
 <meta charset="UTF-8">
 <title>マーケタータイプ診断</title>
 <style>
-  body { font-family: Arial, sans-serif; max-width: 800px; margin: auto; padding: 20px; line-height:1.6;}
-  h1 { text-align:center; }
-  h2 { color: #333; margin-top:30px;}
-  .question { margin-bottom: 20px; }
-  .option { 
-    margin: 8px 0; 
-    display:block; 
-    padding: 12px 20px; 
-    font-size:16px; 
-    cursor:pointer; 
-    width:100%; 
-    text-align:left; 
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    background:#f9f9f9;
-    transition: background 0.2s;
-  }
-  .option:hover { background:#eef; }
-</style>
-</head>
-<body>
-
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-<meta charset="UTF-8">
-<title>マーケタータイプ診断</title>
-<style>
   body { font-family: Arial, sans-serif; max-width: 800px; margin: auto; padding: 20px; line-height:1.6; background:#fefefe;}
   h1 { text-align:center; }
   h2 { color: #333; margin-top:30px;}
@@ -67,9 +39,10 @@
 <div id="result" style="display:none;"></div>
 
 <script>
-// 質問データ
 const questions = [
-  { q: "キャンペーンを企画するとき、最初に重視するのは？", options:[
+  {
+    q: "キャンペーンを企画するとき、重視するのは？",
+    options: [
       {text:"ブランドの世界観や統一感が伝わるか", type:"ブランディング派"},
       {text:"ユニークさや斬新さで話題化できるか", type:"広告クリエイティブ派"},
       {text:"売上や成果に直結する施策かどうか", type:"コンバージョン・売上派"},
@@ -78,8 +51,11 @@ const questions = [
       {text:"最新のトレンドや新ツールを活かせるか", type:"トレンド施策派"},
       {text:"学術的な理論や研究で裏付けられるか", type:"学術・アカデミック派"},
       {text:"現場経験や直感で効果が期待できるか", type:"経験値・現場主義派"}
-  ]},
-  { q: "施策の成功を判断する一番の基準は？", options:[
+    ]
+  },
+  {
+    q: "施策の成功を判断する基準は？",
+    options: [
       {text:"ブランドイメージが確実に向上したか", type:"ブランディング派"},
       {text:"SNSなどで多くの話題を獲得できたか", type:"広告クリエイティブ派"},
       {text:"売上やコンバージョンが大きく伸びたか", type:"コンバージョン・売上派"},
@@ -88,8 +64,11 @@ const questions = [
       {text:"トレンドに乗って注目を集められたか", type:"トレンド施策派"},
       {text:"理論や研究に基づき正当性を示せたか", type:"学術・アカデミック派"},
       {text:"現場の感覚で効果を実感できたかどうか", type:"経験値・現場主義派"}
-  ]},
-  { q: "新しい施策を検討する際に重視する情報源は？", options:[
+    ]
+  },
+  {
+    q: "新しい施策に重視する情報源は？",
+    options: [
       {text:"他社ブランドやデザインの最新事例", type:"ブランディング派"},
       {text:"バズを生んだ広告や面白い動画事例", type:"広告クリエイティブ派"},
       {text:"過去の売上データや利益率の推移", type:"コンバージョン・売上派"},
@@ -98,8 +77,11 @@ const questions = [
       {text:"最新ニュースやツール紹介の専門記事", type:"トレンド施策派"},
       {text:"論文や学術発表、専門書の知見", type:"学術・アカデミック派"},
       {text:"営業や顧客から直接聞いた現場の声", type:"経験値・現場主義派"}
-  ]},
-  { q: "チームでよく口にする言葉はどれですか？", options:[
+    ]
+  },
+  {
+    q: "チームでよく口にするのは？",
+    options: [
       {text:"「ブランドの一貫性を守ることが大事」", type:"ブランディング派"},
       {text:"「もっと面白いアイデアを出そうよ」", type:"広告クリエイティブ派"},
       {text:"「その施策は売上に直結するのか？」", type:"コンバージョン・売上派"},
@@ -108,8 +90,11 @@ const questions = [
       {text:"「今のトレンドをうまく活かそう」", type:"トレンド施策派"},
       {text:"「理論的に正しいか確認しよう」", type:"学術・アカデミック派"},
       {text:"「現場でどう感じたかを教えて」", type:"経験値・現場主義派"}
-  ]},
-  { q: "マーケティングで最もワクワクする瞬間は？", options:[
+    ]
+  },
+  {
+    q: "マーケティングで最もワクワクする瞬間は？",
+    options: [
       {text:"ブランドのビジュアルやコピーが完成", type:"ブランディング派"},
       {text:"仕掛けた施策が話題化して拡散された時", type:"広告クリエイティブ派"},
       {text:"売上や成果のグラフが大きく伸びた時", type:"コンバージョン・売上派"},
@@ -118,9 +103,74 @@ const questions = [
       {text:"新しいツールを試して成果が出せた時", type:"トレンド施策派"},
       {text:"研究と実務が結びついて効果を出せた時", type:"学術・アカデミック派"},
       {text:"経験が的中して成果を実感できた時", type:"経験値・現場主義派"}
-  ]}
+    ]
+  },
+  {
+    q: "もし予算が出たら、何に使いますか？",
+    options: [
+      {text:"ブランド動画やデザイン刷新への投資", type:"ブランディング派"},
+      {text:"話題を生むためのクリエイティブ企画", type:"広告クリエイティブ派"},
+      {text:"広告配信枠や販売チャネルの強化", type:"コンバージョン・売上派"},
+      {text:"データ解析やリサーチツールの導入", type:"データ・PDCA派"},
+      {text:"市場調査や戦略コンサルティング依頼", type:"戦略・フレームワーク派"},
+      {text:"最新SNS施策や新しいマーケツール導入", type:"トレンド施策派"},
+      {text:"外部研究者や学術調査への共同投資", type:"学術・アカデミック派"},
+      {text:"店舗体験や営業現場の改善プロジェクト", type:"経験値・現場主義派"}
+    ]
+  },
+  {
+    q: "チームでの自分の役割に最も近いのは？",
+    options: [
+      {text:"ブランドの方向性を守る守護者役", type:"ブランディング派"},
+      {text:"ユニークな発想で動かす仕掛け人役", type:"広告クリエイティブ派"},
+      {text:"売上数字を追いかける推進リーダー役", type:"コンバージョン・売上派"},
+      {text:"効果測定と改善を担う分析担当役", type:"データ・PDCA派"},
+      {text:"戦略を描き構造を整理する参謀役", type:"戦略・フレームワーク派"},
+      {text:"トレンドを拾い施策に落とす探索者役", type:"トレンド施策派"},
+      {text:"理論を現場に翻訳する知識人役", type:"学術・アカデミック派"},
+      {text:"現場感覚を伝える橋渡しの調整役", type:"経験値・現場主義派"}
+    ]
+  },
+  {
+    q: "学び方として自分に最も合うのは？",
+    options: [
+      {text:"優れたブランド事例や作品から学ぶ", type:"ブランディング派"},
+      {text:"バズ広告や動画を観察して学ぶ", type:"広告クリエイティブ派"},
+      {text:"売上や営業数字を分析して学ぶ", type:"コンバージョン・売上派"},
+      {text:"データや数値の変化を追って学ぶ", type:"データ・PDCA派"},
+      {text:"戦略論やビジネスモデルを研究する", type:"戦略・フレームワーク派"},
+      {text:"新しいSNSやツールを実際に試す", type:"トレンド施策派"},
+      {text:"論文や専門書をじっくり読む", type:"学術・アカデミック派"},
+      {text:"現場で試して体感しながら学ぶ", type:"経験値・現場主義派"}
+    ]
+  },
+  {
+    q: "自分のマーケターとしての最大の強みは？",
+    options: [
+      {text:"センスや世界観を表現できる力", type:"ブランディング派"},
+      {text:"面白さで人を惹きつける発想力", type:"広告クリエイティブ派"},
+      {text:"数字を成果に直結させる実行力", type:"コンバージョン・売上派"},
+      {text:"データを基に改善を回す力", type:"データ・PDCA派"},
+      {text:"論理的に全体を設計できる構想力", type:"戦略・フレームワーク派"},
+      {text:"新しい流れを敏感に捉える嗅覚", type:"トレンド施策派"},
+      {text:"知識や理論を活用する学術的思考力", type:"学術・アカデミック派"},
+      {text:"経験を実践に活かす現場感覚力", type:"経験値・現場主義派"}
+    ]
+  },
+  {
+    q: "直感で「自分はこうありたい」と思う像は？",
+    options: [
+      {text:"ブランドを磨き上げるアーティスト像", type:"ブランディング派"},
+      {text:"世の中を驚かせるクリエイティブ仕掛け人", type:"広告クリエイティブ派"},
+      {text:"売上を伸ばす実務に強い営業達人像", type:"コンバージョン・売上派"},
+      {text:"数字で語れる改善マスター像", type:"データ・PDCA派"},
+      {text:"全体を設計する戦略家のブレーン像", type:"戦略・フレームワーク派"},
+      {text:"トレンドを操る革新的イノベーター像", type:"トレンド施策派"},
+      {text:"学問と実務をつなぐ知識人の姿", type:"学術・アカデミック派"},
+      {text:"現場に根ざす職人気質のマーケター像", type:"経験値・現場主義派"}
+    ]
+  }
 ];
-
 // タイプ診断テキスト
 const typeDescriptions = {
   "ブランディング派":"ブランドの世界観や統一感を重視するタイプ。ブランド価値向上に長ける。",
@@ -168,31 +218,29 @@ function showQuestion(){
   });
 }
 
-// 結果表示（メイン・サブ診断）
+// 結果表示（メイン・サブ診断） - 修正版
 function showResult(){
   document.getElementById("quiz").style.display = "none";
   const resultDiv = document.getElementById("result");
   resultDiv.style.display = "block";
   resultDiv.innerHTML = "<h2>あなたのマーケタータイプ診断結果</h2>";
 
+  // スコアを降順でソート
   const sortedScores = Object.entries(scores).sort((a,b)=>b[1]-a[1]);
-  
-  // メイン診断
-  const mainScore = sortedScores[0][1];
-  const mainTypes = sortedScores.filter(([type,score])=>score===mainScore).map(([type])=>type);
-  resultDiv.innerHTML += "<h3 style='color:#2a6ebb; font-size:1.5em;'>メイン診断</h3>";
-  mainTypes.forEach(t=>{
-    resultDiv.innerHTML += `<div class="main-type"><h4>${t}</h4><p>${typeDescriptions[t]}</p></div>`;
-  });
+ 
+  // メイン診断 (1つに限定)
+  if (sortedScores.length > 0 && sortedScores[0][1] > 0) {
+    const mainType = sortedScores[0][0]; // 1位のタイプ名
+    resultDiv.innerHTML += "<h3 style='color:#2a6ebb; font-size:1.5em;'>メイン診断</h3>";
+    resultDiv.innerHTML += `<div class="main-type"><h4>${mainType}</h4><p>${typeDescriptions[mainType]}</p></div>`;
+  }
 
-  // サブ診断
-  const subScore = sortedScores.filter(([type,score])=>score<mainScore)[0]?.[1];
-  if(subScore !== undefined){
-    const subTypes = sortedScores.filter(([type,score])=>score===subScore).map(([type])=>type);
+  // サブ診断 (1つに限定)
+  // 2番目の要素が存在し、かつスコアが0より大きい場合のみ表示
+  if (sortedScores.length > 1 && sortedScores[1][1] > 0) {
+    const subType = sortedScores[1][0]; // 2位のタイプ名
     resultDiv.innerHTML += "<h3 style='color:#555; font-size:1.2em;'>サブ診断</h3>";
-    subTypes.forEach(t=>{
-      resultDiv.innerHTML += `<div class="sub-type"><h4>${t}</h4><p>${typeDescriptions[t]}</p></div>`;
-    });
+    resultDiv.innerHTML += `<div class="sub-type"><h4>${subType}</h4><p>${typeDescriptions[subType]}</p></div>`;
   }
 }
 
